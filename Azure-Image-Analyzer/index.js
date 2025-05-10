@@ -4,6 +4,7 @@ import cors from 'cors';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { OpenAI } from 'openai';
+import path from 'path';
 
 dotenv.config();
 
@@ -26,6 +27,9 @@ app.use((_req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     next();
 });
+
+// Serve static files
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Verify environment variables
 const requiredEnvVars = [
@@ -125,19 +129,19 @@ app.post('/analyze-image', async (req, res) => {
 
 // Serve HTML files
 app.get('/upload', (_req, res) => {
-    res.sendFile(__dirname + '/public/upload.html');
+    res.sendFile(path.join(__dirname, 'public', 'upload.html'));
 });
 
 app.get('/camera', (_req, res) => {
-    res.sendFile(__dirname + '/public/camera.html');
+    res.sendFile(path.join(__dirname, 'public', 'camera.html'));
 });
 
 app.get('/docs', (_req, res) => {
-    res.sendFile(__dirname + '/public/docs.html');
+    res.sendFile(path.join(__dirname, 'public', 'docs.html'));
 });
 
 app.get('/', (_req, res) => {
-    res.sendFile(__dirname + '/public/index.html');
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.listen(port, () => {
