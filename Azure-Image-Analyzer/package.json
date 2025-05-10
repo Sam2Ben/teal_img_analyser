@@ -1,0 +1,34 @@
+{
+  "name": "azure-image-analyzer",
+  "version": "1.0.0",
+  "description": "Image analysis application powered by Azure OpenAI's GPT-4 Vision model",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "azure",
+    "openai",
+    "gpt-4",
+    "vision",
+    "image-analysis",
+    "ai"
+  ],
+  "author": "Azure_APENAI",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "openai": "^4.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

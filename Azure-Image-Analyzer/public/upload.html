@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Image - Azure Image Analyzer</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <a href="/" class="text-2xl font-bold text-gray-800">Azure Image Analyzer</a>
+                <div class="space-x-4">
+                    <a href="/docs" class="text-gray-600 hover:text-gray-900">Documentation</a>
+                    <a href="/camera" class="text-gray-600 hover:text-gray-900">Use Camera</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h1 class="text-3xl font-bold text-gray-900 mb-6">Upload Image for Analysis</h1>
+            
+            <div class="mb-6">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="imageUpload">
+                    Choose an image
+                </label>
+                <input type="file" 
+                       id="imageUpload" 
+                       accept="image/*" 
+                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="prompt">
+                    Custom Prompt (Optional)
+                </label>
+                <textarea id="prompt" 
+                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Describe what you want to know about the image..."></textarea>
+            </div>
+
+            <div class="mb-6">
+                <button id="analyzeBtn" 
+                        class="w-full bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                    Analyze Image
+                </button>
+            </div>
+
+            <div id="preview" class="mb-6 hidden">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Image Preview</h2>
+                <img id="previewImage" class="max-w-full h-auto rounded-lg shadow-md" alt="Preview">
+            </div>
+
+            <div id="result" class="hidden">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Analysis Result</h2>
+                <div id="resultContent" class="bg-gray-50 p-4 rounded-lg"></div>
+            </div>
+
+            <div id="loading" class="hidden">
+                <div class="flex items-center justify-center">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+                </div>
+                <p class="text-center mt-4 text-gray-600">Analyzing image...</p>
+            </div>
+
+            <div class="text-center mt-8">
+                <p>Powered by Azure OpenAI GPT-4 Vision</p>
+                <p class="mt-2 text-gray-400">© 2025 Azure_APENAI Image Analyze© 2025 AiCraftersX Teal Text Summarization API. All rights reserved</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const imageUpload = document.getElementById('imageUpload');
+        const preview = document.getElementById('preview');
+        const previewImage = document.getElementById('previewImage');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const result = document.getElementById('result');
+        const resultContent = document.getElementById('resultContent');
+        const loading = document.getElementById('loading');
+        const promptInput = document.getElementById('prompt');
+
+        imageUpload.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    preview.classList.remove('hidden');
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        analyzeBtn.addEventListener('click', async function() {
+            const file = imageUpload.files[0];
+            if (!file) {
+                alert('Please select an image first');
+                return;
+            }
+
+            // Validate file size (max 10MB)
+            if (file.size > 10 * 1024 * 1024) {
+                alert('Image size should be less than 10MB');
+                return;
+            }
+
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                alert('Please select a valid image file');
+                return;
+            }
+
+            analyzeBtn.disabled = true;
+            loading.classList.remove('hidden');
+            result.classList.add('hidden');
+
+            try {
+                const reader = new FileReader();
+                reader.onload = async function(e) {
+                    try {
+                        const base64Image = e.target.result.split(',')[1];
+                        const prompt = promptInput.value || 'Describe this image in detail';
+
+                        console.log('Sending request to server...');
+                        const response = await fetch('/analyze-image', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                base64Image,
+                                prompt
+                            })
+                        });
+
+                        console.log('Response status:', response.status);
+                        const data = await response.json();
+                        console.log('Response data:', data);
+                        
+                        if (response.ok) {
+                            resultContent.innerHTML = `<p class="text-gray-800">${data.response}</p>`;
+                            if (data.usage) {
+                                resultContent.innerHTML += `
+                                    <div class="mt-4 text-sm text-gray-600">
+                                        <p>Tokens used: ${data.usage.total_tokens}</p>
+                                    </div>
+                                `;
+                            }
+                        } else {
+                            const errorMessage = data.details || data.error || 'Failed to analyze image';
+                            throw new Error(errorMessage);
+                        }
+
+                        result.classList.remove('hidden');
+                    } catch (error) {
+                        console.error('Error during analysis:', error);
+                        resultContent.innerHTML = `
+                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                                <p class="font-bold">Error</p>
+                                <p>${error.message}</p>
+                                ${error.stack ? `<pre class="text-xs mt-2">${error.stack}</pre>` : ''}
+                            </div>
+                        `;
+                        result.classList.remove('hidden');
+                    }
+                };
+
+                reader.onerror = function(error) {
+                    console.error('Error reading file:', error);
+                    alert('Error reading the image file. Please try again.');
+                };
+
+                reader.readAsDataURL(file);
+            } catch (error) {
+                console.error('Error in click handler:', error);
+                alert('Error: ' + error.message);
+            } finally {
+                analyzeBtn.disabled = false;
+                loading.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html> 

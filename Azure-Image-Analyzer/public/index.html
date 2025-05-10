@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Image Analyzer</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="text-2xl font-bold text-gray-800">Azure Image Analyzer</div>
+                <div class="space-x-4">
+                    <a href="/docs" class="text-gray-600 hover:text-gray-900">Documentation</a>
+                    <a href="https://github.com/yourusername/azure-image-analyzer" class="text-gray-600 hover:text-gray-900">GitHub</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">Analyze Images with Azure OpenAI GPT-4 Vision</h1>
+            <p class="text-xl text-gray-600">Upload images or use your camera to get detailed analysis powered by Azure OpenAI</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Upload Image</h2>
+                <p class="text-gray-600 mb-4">Upload an image from your device for analysis</p>
+                <a href="/upload" class="inline-block bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors">
+                    Try Upload
+                </a>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Use Camera</h2>
+                <p class="text-gray-600 mb-4">Capture an image using your device's camera</p>
+                <a href="/camera" class="inline-block bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition-colors">
+                    Use Camera
+                </a>
+            </div>
+        </div>
+
+        <div class="mt-12 bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Features</h2>
+            <ul class="grid md:grid-cols-3 gap-4">
+                <li class="flex items-center space-x-2">
+                    <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>GPT-4 Vision Analysis</span>
+                </li>
+                <li class="flex items-center space-x-2">
+                    <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>Real-time Camera Capture</span>
+                </li>
+                <li class="flex items-center space-x-2">
+                    <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>Detailed Image Descriptions</span>
+                </li>
+            </ul>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-12">
+        <div class="max-w-6xl mx-auto px-4 py-8">
+            <div class="text-center">
+                <p>Powered by Azure OpenAI GPT-4 Vision x Teal </p>
+                <p class="mt-2 text-gray-400">© 2025 AiCraftersX Teal Text Summarization API. All rights reserved</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html> 
